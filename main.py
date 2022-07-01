@@ -31,8 +31,36 @@ def init_params_2(distance):
     return mass, quad, e, angular_mom, init_four_vel, init_pos
 
 
-def quadrupol(s: float, y_prev: array, q, m, energy, angular_momentum): # für ODEINT  y, s für solve_ivp s,y
-    t1, t2, r1, r2,  theta1, theta2, phi1, phi2 = y_prev
+def quadrupol_ivp(s: float, y_prev: array, q, m, energy, angular_momentum):
+    t1, r1, r2,  theta1, theta2, phi = y_prev
+
+    alpha = copy(1 - (2 * m / r1))
+    beta = copy(1 + (sin(theta1) ** 2 * m ** 2 / (r1 ** 2 - 2 * m * r1)))
+    gamma = copy((q*(q+2)*(r1-m)*m**2 * sin(theta1)**2)/(r1**2 - 2*m*r1 + m**2 * sin(theta1)**2))
+
+    t_dot = alpha ** (-(1 + q)) * energy
+    phi_dot = alpha ** q * (angular_momentum / (r1 ** 2 * sin(theta1) ** 2))
+
+    r1_dot = r2
+    r2_a = -(1 + q) * m / (r1 ** 2) * alpha**(2*q+1) * beta ** (q * (q + 2)) * t_dot**2
+    r2_b = ((1+q)*m + gamma) * (r2 ** 2 / (r1**2-2*m*r1))
+    r2_c = ((r1-2*m-q*m) - gamma) * theta2**2
+    r2_d = 2*((q*(q+2)*m**2 * sin(theta1) * cos(theta1))/(r1**2 - 2*m*r1 + m**2 * sin(theta1)**2))*theta2*r2
+    r2_e = (r1-2*m-q*m)*beta**(q*(2+q))*sin(theta1)**2*phi_dot**2
+    r2_dot = r2_a + r2_b + r2_c + r2_d + r2_e
+
+    theta1_dot = theta2
+    theta2_a = - ((q*(q+2)*m**2 * sin(theta1) * cos(theta1))/(r1**2 - 2*m*r1 + m**2 * sin(theta1)**2)) * (r2**2 /(r1**2-2*m*r1) - theta2**2)
+    theta2_b = beta**(q*(2+q)) * sin(theta1) * cos(theta1) * phi_dot**2
+    theta2_c = ((2*q*m)/(r1**2-2*m*r1) - 2/r1 - (2*(q+2)*m**2)/(r1**2-2*m*r1 + m**2 * sin(theta1)**2) * ((r1-m)*sin(theta1)**2)/(r1**2-2*r1*m))*r2*theta2
+    theta2_dot = theta2_a + theta2_b + theta2_c
+
+    y_step = array([t_dot, r1_dot, r2_dot, theta1_dot, theta2_dot, phi_dot])
+    return y_step
+
+
+def quadrupol_odeint(y_prev: array, s: float, q, m, energy, angular_momentum):
+    t1, r1, r2,  theta1, theta2, phi = y_prev
 
     alpha = copy(1 - (2 * m / r1))
     beta = copy(1 + (sin(theta1) ** 2 * m ** 2 / (r1 ** 2 - 2 * m * r1)))
@@ -137,31 +165,30 @@ if __name__ == "__main__":
         e = (1 - 2 * mm / dist) ** (1 + qq) * u_t  # Energy, constant of motion
         angular_mom = (1 - 2 * mm / dist) ** (-qq) * dist ** 2 * sin(init_pos[2]) * init_four_vel[3]  # constant of motion
         u_t, u_r, u_theta, u_phi = init_four_vel
-        tt, rr, theta, phi = init_pos
-        if True:
-            sol = solve_ivp(quadrupol,
+        tt, rr1, theta_1, phi1 = init_pos
+        if False:
+            sol = solve_ivp(quadrupol_ivp,
                             t_span=[0, 2],
-                            y0=array([tt, u_t, rr, u_r, theta, u_theta, phi, u_phi]),
-                            args=(mm, qq),
+                            y0=array([tt, rr1, u_r, theta_1, u_theta, phi1]),
+                            args=(mm, qq, e, angular_mom),
                             vectorized=True,
-                            method='BDF',
+                            method='RK45',
                             atol=1e-5,
                             rtol=1e-5,
-                            min_step=1e-5,
                             dense_output=True
                             )
-            result_spherical = vstack([sol.y[1], sol.y[2], sol.y[3]])
+            result_spherical = vstack([sol.y[1], sol.y[3], sol.y[5]])
             plot_data(result_spherical, aax)
 
-        if False:
-            sol = odeint(rsdgl,
-                            y0=array([tt, rr1, theta_1, phi1, u_r, u_theta]),
+        if True:
+            sol = odeint(quadrupol_odeint,
+                            y0=array([tt, rr1, u_r, theta_1, u_theta, phi1]),
                             t=linspace(0, 5, 200),
                             args=(mm, qq, e, angular_mom),
                             atol=1e-7,
                             rtol=1e-7
                             )
-            result_spherical = vstack([sol[:, 1], sol[:, 2], sol[:, 3]])
+            result_spherical = vstack([sol[:, 1], sol[:, 3], sol[:, 5]])
             plot_data(result_spherical, aax)
 
         if False:

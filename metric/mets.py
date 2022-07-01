@@ -10,7 +10,7 @@ def q_metric(position, params):
     """
     returns the metric
     """
-    tt, r, theta, phi = position
+    tt, r, theta, phi= position
     q, M = params
     g00 = -(1. - 2. * M / r)**(1+q)
     g11 = (1. - 2. * M / r)**(-q-1) * (1 + (M**2 * sin(theta)**2)/(r**2 - 2*M*r))**(-q*(2+q))

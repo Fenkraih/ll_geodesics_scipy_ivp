@@ -3,6 +3,16 @@ visuals for the initial condition stuff
 """
 import matplotlib.pyplot as plt
 from numpy import sqrt, pi, cos, sin, size, linspace, outer, ones, array, arccos, arctan2, arcsin
+from metric import q_metric
+
+
+def check_tetrad(init_pos, quad, mass):
+    g = q_metric(init_pos, [quad, mass])
+    triad = [[0, -1 * (1 / sqrt(g[2])), 0],
+                [0, 0, 1 * (1 / sqrt(g[3]))],
+                [-1 * (1 / sqrt(g[1])), 0, 0]
+                ]
+    return triad
 
 
 def angle_calc(mass, quad_param, distance, grid_steps):

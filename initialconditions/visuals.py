@@ -6,6 +6,20 @@ from numpy import sqrt, pi, cos, sin, size, linspace, outer, ones, array, arccos
 from metric import q_metric
 
 
+def vartheta_raster(init_three_velocity_list, g):
+    """
+    vartheta = 0 means to the left
+    pi/2 means straight upwards
+    :param init_three_velocity_list:
+    :return:
+    """
+    for var_theta in linspace(.9*pi/2,1.1*pi/2,100):
+        init_three_velocity_list.append([1 * cos(var_theta) * (1 / sqrt(g[1])),
+                                        -1 * sin(var_theta) * (1 / sqrt(g[2])),
+                                        0])
+    return init_three_velocity_list
+
+
 def check_tetrad(init_pos, quad, mass):
     g = q_metric(init_pos, [quad, mass])
     triad = [[0, -1 * (1 / sqrt(g[2])), 0],

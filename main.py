@@ -32,7 +32,7 @@ def init_params_2(distance):
     return mass, quad, e, angular_mom, init_four_vel, init_pos
 
 
-def too_deep(t, y):
+def too_deep(t, y, *args):
     return y[1] - 2.5
 
 
@@ -72,6 +72,7 @@ if __name__ == "__main__":
         tt, rr1, theta_1, phi1 = init_ort
         sol = solve_ivp(quadrupol_ivp,
                         t_span=[0,50],
+                        t_eval=linspace(0,50,200),
                         y0=array([tt, rr1, u_r, theta_1, u_theta, phi1]),
                         args=(mm, qq, e, angular_mom),
                         vectorized=True,
@@ -79,9 +80,8 @@ if __name__ == "__main__":
                         atol=1e-10,
                         rtol=1e-10,
                         dense_output=True,
-                        max_step=1e-3
+                        events=too_deep
                         )
-        print(sol)
         result_spherical = vstack([sol.y[1], sol.y[3], sol.y[5]])
         plot_data(result_spherical, aax)
     plt.show()

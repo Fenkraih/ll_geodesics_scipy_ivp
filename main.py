@@ -3,6 +3,7 @@ from initialconditions import lin_comb, space_light_timelike, check_tetrad
 from metric import q_metric
 from numpy import array, sin, cos, sum, pi, linspace, vstack, sqrt, tan, copy
 from scipy.integrate import solve_ivp, odeint
+from plotting import plot_data_3d
 from differential_equations import quadrupol_odeint, schwarzschild_odeint, quadrupol_ivp, schwarzschild_ivp
 
 
@@ -10,58 +11,11 @@ def too_deep(t, y, *args):
     return y[1] - 2.5
 
 
-def plot_data_3d(result_sp, ax, black_geodesic, r_anzeige, plot_plane=None, axins=None):
-    r = result_sp[0]
-    theta = result_sp[1]
-    phi = result_sp[2]
-    x = r * cos(phi) * sin(theta)
-    y = r * sin(phi) * sin(theta)
-    z = r * cos(theta)
-    if black_geodesic:
-        if plot_plane == "3d":
-            ax.plot3D(x, y, z, "k-")
-        if plot_plane == "xy":
-            ax.plot(x, y, "k-")
-            if axins is not None:
-                axins.plot(x, y, "k-")
-        if plot_plane == "xz":
-            ax.plot(x, z, "k-")
-            if axins is not None:
-                axins.plot(x, z, "k-")
-        if plot_plane == "yz":
-            ax.plot(y, z, "k-")
-            if axins is not None:
-                axins.plot(x, z, "k-")
-    else:
-        if plot_plane == "3d":
-            ax.plot3D(x, y, z, "b-")
-        if plot_plane == "xy":
-            ax.plot(x, y, "b-")
-            if axins is not None:
-                axins.plot(x, y, "b-")
-        if plot_plane == "xz":
-            ax.plot(x, z, "b-")
-            if axins is not None:
-                axins.plot(x, z, "b-")
-        if plot_plane == "yz":
-            ax.plot(y, z, "b-")
-            if axins is not None:
-                axins.plot(y, z, "b-")
-
-    if plot_plane == "3d":
-        ax.set_xlim([-r_anzeige, r_anzeige])
-        ax.set_ylim([-r_anzeige, r_anzeige])
-        ax.set_zlim([-r_anzeige, r_anzeige])
-    else:
-        plt.xlim([-r_anzeige, r_anzeige])
-        plt.ylim([-r_anzeige, r_anzeige])
-
-
 if __name__ == "__main__":
-    dist = 3
+    dist = 3.002
     init_ort = [0, dist, pi / 2, 0]  # for some reason r phi theta
     mm = 1
-    qq = 0
+    qq = 0.001
     grid_steps = 1
     lw_theta, hg_theta, lw_phi, hg_phi = 90, 90, 30, 60
     angles = [lw_theta, hg_theta, lw_phi, hg_phi]

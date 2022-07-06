@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from initialconditions import lin_comb, space_light_timelike, check_tetrad
+from initialconditions import lin_comb, space_light_timelike, check_tetrad, vartheta_raster
 from metric import q_metric
 from numpy import array, sin, cos, sum, pi, linspace, vstack, sqrt, tan, copy
 from scipy.integrate import solve_ivp, odeint
@@ -11,24 +11,30 @@ def too_deep(t, y, *args):
     return y[1] - 2.5
 
 
+def too_far(t,y,*args):
+    return 10 - abs(y[1])
+
+
 if __name__ == "__main__":
-    dist = 5
+    dist = 3.002
     init_ort = [0, dist, pi / 2, 0]  # for some reason r phi theta
     mm = 1
-    qq = 1
+    qq = .001
     grid_steps = 1
     lw_theta, hg_theta, lw_phi, hg_phi = 90, 90, 30, 60
     angles = [lw_theta, hg_theta, lw_phi, hg_phi]
     g = q_metric(init_ort, [qq, mm])
     too_deep.terminal = True
+    too_far.terminal = False
     plot_plane = "3d"
+    r_values = []
     if plot_plane == "3d":
         aax = plt.axes(projection='3d')
         axins = None
     else:
         aax = plt.axes()
         axins = aax.inset_axes([0.7, 0.7, 0.25, 0.25])
-        x1, x2, y1, y2 = dist-.1, dist+.1, -5e-7, 5e-7
+        x1, x2, y1, y2 = dist, dist+0.1, -1e-12, 1e-12
         axins.set_xlim(x1, x2)
         axins.set_ylim(y1, y2)
         aax.indicate_inset_zoom(axins, edgecolor="black")
@@ -60,5 +66,4 @@ if __name__ == "__main__":
         plot_data_3d(result_spherical, aax, r_anzeige=dist + 0.5,
                      black_geodesic=sol.message == "A termination event occurred.",
                      plot_plane=plot_plane, axins=axins)
-
     plt.show()

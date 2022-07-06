@@ -12,10 +12,10 @@ def too_deep(t, y, *args):
 
 
 if __name__ == "__main__":
-    dist = 3.002
+    dist = 5
     init_ort = [0, dist, pi / 2, 0]  # for some reason r phi theta
     mm = 1
-    qq = 0.001
+    qq = 1
     grid_steps = 1
     lw_theta, hg_theta, lw_phi, hg_phi = 90, 90, 30, 60
     angles = [lw_theta, hg_theta, lw_phi, hg_phi]
@@ -42,18 +42,20 @@ if __name__ == "__main__":
         u_t, u_r, u_theta, u_phi = init_4_vel
         tt, rr1, theta_1, phi1 = init_ort
         sol = solve_ivp(quadrupol_ivp,
-                        t_span=[0, 50],
-                        t_eval=linspace(0, 50, 200),
+                        #schwarzschild_ivp,
+                        t_span=[0, 1000],
+                        t_eval=linspace(0, 1000, 20000),
                         y0=array([tt, rr1, u_r, theta_1, u_theta, phi1]),
                         args=(mm, qq, e, angular_mom),
+                        # y0=array([tt, u_t, rr1, u_r, theta_1, u_theta, phi1, u_phi]),
                         vectorized=True,
                         method='RK45',
-                        atol=1e-10,
-                        rtol=1e-10,
-                        dense_output=True,
+                        atol=1e-12,
+                        rtol=1e-12,
                         events=too_deep
                         )
         result_spherical = vstack([sol.y[1], sol.y[3], sol.y[5]])
+        # result_spherical = vstack([sol.y[2], sol.y[4], sol.y[6]])
 
         plot_data_3d(result_spherical, aax, r_anzeige=dist + 0.5,
                      black_geodesic=sol.message == "A termination event occurred.",

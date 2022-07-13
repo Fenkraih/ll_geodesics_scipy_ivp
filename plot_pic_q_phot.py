@@ -1,8 +1,13 @@
 import matplotlib.pyplot as plt
-from numpy import linspace
+from scipy.optimize import curve_fit
+from numpy import linspace, load, set_printoptions, sin
 from scipy import stats
 
-if __name__ == "__main__":
+
+def func(x, a, b, c, d):
+    return a*x + b * sin(c*x) + d
+
+def m1_plot():
     xval = linspace(0, 1, 50)
     data_m1 = [2.999999433164416, 3.051914400423299, 3.103628707885562, 3.1551468902358755, 3.206474615830075,
             3.2576186866951655, 3.308587038529318, 3.359389874373039, 3.4100305952398307, 3.460517136827863,
@@ -17,9 +22,36 @@ if __name__ == "__main__":
             5.064264174533536, 5.111837181221501, 5.159404519553631, 5.2069707242145915, 5.254540329889055,
             5.302119004932858, 5.349709016688335, 5.397314899840153]
 
-    res = stats.linregress(xval, data, alternative="greater")
-    plt.plot(xval, data, "bo", linewidth=1, label="Datapoints")
-    plt.plot(xval, res.intercept + res.slope * xval, 'k-', label='fitted line', linewidth=2)
-    plt.text(x=0.1, y=4.5, s=f"r = {res.slope}q + {res.intercept}", fontsize=12)
+    files_here = f"/home/altin/ll_geod_scipy_ivp/secure_data/good_batch_1/m0/q"
+    plot_list = []
+    for ii in range(100):
+        plot_list.append(load(files_here + str(ii) + ".npy"))
+
+    xval = linspace(0,1,100)
+    data = plot_list
+
+    popt, pcov = curve_fit(func, xval, data)
+    a, b, c, d = popt
+
+    # res = stats.linregress(xval, data)
+    ax = plt.axes()
+    ax.plot(xval, data, "bo", linewidth=1, label="Datapoints")
+    # plt.plot(xval, res.intercept + res.slope * xval, 'k-', label='fitted line', linewidth=2)
+    # plt.text(x=0.01, y=5.1, s=f"r = {res.slope}q + {res.intercept}", fontsize=12)
+    ax.plot(xval, a*xval + b * sin(c*xval) + d, 'r-', label='fitted line', linewidth=2)
+    ax.text(x=0.01, y=5, s=f"r = a*q + b * sin(c * q) + d", fontsize=16)
+    ax.text(x=0.01, y=4.9, s=f"a = {a}", fontsize=16)
+    ax.text(x=0.01, y=4.8, s=f"b = {b}", fontsize=16)
+    ax.text(x=0.01, y=4.7, s=f"c = {c}", fontsize=16)
+    ax.text(x=0.01, y=4.6, s=f"d = {d}", fontsize=16)
+    ax.set(xlabel='q', ylabel='r')
+    ax.xaxis.label.set_size(20)
+    ax.yaxis.label.set_size(20)
+    plt.tick_params(axis='both', which='major', labelsize=20)
     plt.legend()
     plt.show()
+
+
+if __name__ == "__main__":
+    set_printoptions(precision=15)
+    m1_plot()

@@ -15,8 +15,8 @@ def too_far(t,y,*args):
     return 10 - abs(y[1])
 
 
-def iterate_calculation(iter_list, qq = 0.001):
-    mm = 1.1
+def iterate_calculation(iter_list, qq=0):
+    mm = 1
     falls_in = 1
     falling_list = []
     turning_point = None
@@ -83,7 +83,7 @@ if __name__ == "__main__":
     plot_this_shit = []
     for qq in linspace(.0, 1, 20):
         print(f"qq bei {qq}")
-        init_list = linspace(3+2*qq-0.1, 3+2*qq + 1, 100)
+        init_list = linspace(3+2*qq-0.1, 3+2*qq + 1, 20)
 
         index_thing, list_this, result = iterate_calculation(init_list, qq)
         print(index_thing)
@@ -94,7 +94,7 @@ if __name__ == "__main__":
         upper_thing = init_list[index_thing]
         lower_thing = init_list[index_thing-1]
 
-        init_list = linspace(lower_thing, upper_thing, 100)
+        init_list = linspace(lower_thing, upper_thing, 20)
         index_thing, list_this, result = iterate_calculation(init_list, qq)
         print(index_thing)
         if 0 in list_this and 1 not in list_this:

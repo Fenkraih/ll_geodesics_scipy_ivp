@@ -33,14 +33,15 @@ def one_calculation(dist, mm_2, qq_2):
     sol = solve_ivp(quadrupol_ivp,
                     # schwarzschild_ivp,
                     t_span=[0, 30],
-                    t_eval=linspace(0, 30, 2000),
+                    t_eval=linspace(0, 30, 5000),
                     y0=array([tt, rr1, u_r, theta_1, u_theta, phi1]),
                     args=(mm_2, qq_2, e, angular_mom),
                     # y0=array([tt, u_t, rr1, u_r, theta_1, u_theta, phi1, u_phi]),
                     vectorized=True,
-                    method='DOP853',
+                    method='RK45',
                     atol=1e-12,
                     rtol=1e-12,
+                    max_step=1e-3,
                     events=too_deep
                     )
     result_spherical = vstack([sol.y[1], sol.y[3], sol.y[5]])
@@ -70,15 +71,16 @@ def iterate_calculation(iter_list, qq_2, mm_2):
         tt, rr1, theta_1, phi1 = init_ort
         sol = solve_ivp(quadrupol_ivp,
                         # schwarzschild_ivp,
-                        t_span=[0, 10],
-                        t_eval=linspace(0, 10, 2000),
+                        t_span=[0, 25],
+                        t_eval=linspace(0, 25, 5000),
                         y0=array([tt, rr1, u_r, theta_1, u_theta, phi1]),
                         args=(mm_2, qq_2, e, angular_mom),
                         # y0=array([tt, u_t, rr1, u_r, theta_1, u_theta, phi1, u_phi]),
                         vectorized=True,
-                        method='DOP853',
+                        method='RK45',
                         atol=1e-12,
                         rtol=1e-12,
+                        max_step=1e-3,
                         events=too_deep
                         )
         result_spherical = vstack([sol.y[1], sol.y[3], sol.y[5]])
@@ -121,6 +123,9 @@ def iter_loop_this(qq_1, mm_1, ii_1, jj_1):
         print(f"loop {kk}")
         init_list = linspace(lower_thing, upper_thing, 10)
         upper_thing, lower_thing, results, liste_hier, d_or_list = return_call(init_list, qq_1, mm_1)
+#        if kk == 4:
+#            liste_hier = [1, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+#            lower_thing, upper_thing = init_list[1], init_list[2]
         resultate.append(deepcopy(results))
         liste_des_fallens.append(deepcopy(liste_hier))
         plt.plot(d_or_list, "bo")
@@ -142,12 +147,12 @@ if __name__ == "__main__":
     too_far.terminal = False
     plot_plane = "xz"
 
-
+    quad = .1
     ii = 0
     mm = 1
-    resultate_1, liste_of_sachen, ende_gelaende = iter_loop_this(.1, mm, ii, 0)
+    resultate_1, liste_of_sachen, ende_gelaende = iter_loop_this(quad, mm, ii, 0)
 
-    fig, ax = plt.subplots(nrows=2, ncols=3, figsize=(10, 10))
+    fig, ax = plt.subplots(nrows=2, ncols=5, figsize=(10, 10))
 
     for ii, geo in enumerate(resultate_1[0]):
         if liste_of_sachen[0][ii]==1:
@@ -155,37 +160,61 @@ if __name__ == "__main__":
         else:
             plot_data_3d(geo, ax[0, 0], black_geodesic=False)
 
-    for ii, geo in enumerate(resultate_1[2]):
-        if liste_of_sachen[2][ii]==1:
+    for ii, geo in enumerate(resultate_1[1]):
+        if liste_of_sachen[1][ii]==1:
             plot_data_3d(geo,ax[0, 1], black_geodesic=True)
         else:
             plot_data_3d(geo, ax[0, 1], black_geodesic=False)
 
-    for ii, geo in enumerate(resultate_1[4]):
-        if liste_of_sachen[4][ii]==1:
+    for ii, geo in enumerate(resultate_1[2]):
+        if liste_of_sachen[2][ii]==1:
             plot_data_3d(geo,ax[0, 2], black_geodesic=True)
         else:
             plot_data_3d(geo, ax[0, 2], black_geodesic=False)
 
-    for ii, geo in enumerate(resultate_1[7]):
-        if liste_of_sachen[7][ii]==1:
+    for ii, geo in enumerate(resultate_1[3]):
+        if liste_of_sachen[3][ii]==1:
+            plot_data_3d(geo,ax[0, 3], black_geodesic=True)
+        else:
+            plot_data_3d(geo, ax[0, 3], black_geodesic=False)
+
+    for ii, geo in enumerate(resultate_1[4]):
+        if liste_of_sachen[4][ii]==1:
+            plot_data_3d(geo,ax[0, 4], black_geodesic=True)
+        else:
+            plot_data_3d(geo, ax[0, 4], black_geodesic=False)
+
+    for ii, geo in enumerate(resultate_1[5]):
+        if liste_of_sachen[5][ii]==1:
             plot_data_3d(geo,ax[1, 0], black_geodesic=True)
         else:
             plot_data_3d(geo, ax[1, 0], black_geodesic=False)
 
-    for ii, geo in enumerate(resultate_1[8]):
-        if liste_of_sachen[5][ii]==1:
+    for ii, geo in enumerate(resultate_1[6]):
+        if liste_of_sachen[6][ii]==1:
             plot_data_3d(geo,ax[1, 1], black_geodesic=True)
         else:
             plot_data_3d(geo, ax[1, 1], black_geodesic=False)
 
-    for ii, geo in enumerate(resultate_1[9]):
-        if liste_of_sachen[6][ii]==1:
+    for ii, geo in enumerate(resultate_1[7]):
+        if liste_of_sachen[7][ii]==1:
             plot_data_3d(geo,ax[1, 2], black_geodesic=True)
         else:
             plot_data_3d(geo, ax[1, 2], black_geodesic=False)
 
-    title_list = ["i=1", "i=3", "i=5", "i=8", "i=9", "i=10"]
+    for ii, geo in enumerate(resultate_1[8]):
+        if liste_of_sachen[8][ii]==1:
+            plot_data_3d(geo,ax[1, 3], black_geodesic=True)
+        else:
+            plot_data_3d(geo, ax[1, 3], black_geodesic=False)
+
+    for ii, geo in enumerate(resultate_1[9]):
+        if liste_of_sachen[9][ii]==1:
+            plot_data_3d(geo,ax[1, 4], black_geodesic=True)
+        else:
+            plot_data_3d(geo, ax[1, 4], black_geodesic=False)
+
+    title_list = ["i=1", "i=2", "i=3", "i=4", "i=5", "i=6", "i=7", "i=8", "i=9", "i=10"]
     ii = 0
     for axis_list in ax:
         for axis in axis_list:
@@ -205,5 +234,5 @@ if __name__ == "__main__":
 
     plt.show()
 
-    one_calculation(ende_gelaende, mm, 0.1)
+    one_calculation(ende_gelaende, mm, quad)
 

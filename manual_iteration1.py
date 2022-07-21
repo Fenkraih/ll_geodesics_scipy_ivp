@@ -75,9 +75,10 @@ def iterate_calculation(iter_list, qq_2, mm_2):
                         args=(mm_2, qq_2, e, angular_mom),
                         # y0=array([tt, u_t, rr1, u_r, theta_1, u_theta, phi1, u_phi]),
                         vectorized=True,
-                        method='DOP853',
+                        method='RK45',
                         atol=1e-12,
                         rtol=1e-12,
+                        max_step=1e-3,
                         events=too_deep
                         )
         result_spherical = vstack([sol.y[1], sol.y[3], sol.y[5]])
@@ -148,7 +149,7 @@ def iter_loop_this(qq_1, mm_1, ii_1, jj_1):
     init_list = linspace(init_list[0], init_list[1], 10)
     results, liste_hier = return_call(init_list, qq_1, mm_1)
     resultate_1.append(results)
-    list_of_things.append([1, 1, 1, 0, 0, 0, 0, 0, 0, 0])
+    list_of_things.append([1, 1, 1, 1, 0, 0, 0, 0, 0, 0])
     print("it:10")
     init_list = linspace(init_list[2], init_list[3], 10)
     results, liste_hier = return_call(init_list, qq_1, mm_1)
@@ -179,7 +180,7 @@ if __name__ == "__main__":
     mm = 1
     resultate_1, liste_of_sachen, ende_gelaende = iter_loop_this(quad, mm, ii, 0)
 
-    fig, ax = plt.subplots(nrows=2, ncols=5, figsize=(10, 10))
+    fig, ax = plt.subplots(nrows=2, ncols=5, figsize=(10, 10), sharex=True, sharey=True)
 
     for ii, geo in enumerate(resultate_1[0]):
         if liste_of_sachen[0][ii] == 1:

@@ -46,6 +46,9 @@ def one_calculation(dist, mm_2, qq_2):
                     )
     result_spherical = vstack([sol.y[1], sol.y[3], sol.y[5]])
 
+    if not os.path.isdir(f"/home/altin/ll_geod_scipy_ivp/data/it_1/"):
+        os.mkdir(f"/home/altin/ll_geod_scipy_ivp/data/it_1/")
+    save(f"/home/altin/ll_geod_scipy_ivp/data/it_1/r{dist}", result_spherical)
     plot_data_3d(result_spherical, bx)
     plt.show()
 
@@ -147,7 +150,7 @@ if __name__ == "__main__":
     too_far.terminal = False
     plot_plane = "xz"
 
-    quad = .1
+    quad = 0
     ii = 0
     mm = 1
     resultate_1, liste_of_sachen, ende_gelaende = iter_loop_this(quad, mm, ii, 0)

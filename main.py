@@ -84,6 +84,7 @@ def return_call(initial_list, quad_param, mass):
 def iter_loop_this(qq_1, mm_1, ii_1, jj_1):
     lower_thing, upper_thing = 3*mm_1 + 2 * qq_1 - 0.1, 3*mm_1 + 2 * qq_1 + 1
     for kk in range(10):
+        print(f"{qq_1} loop {kk}")
         init_list = linspace(lower_thing, upper_thing, 8)
         upper_thing, lower_thing = return_call(init_list, qq_1, mm_1)
 
@@ -108,10 +109,8 @@ if __name__ == "__main__":
         aax = plt.axes()
         axins = None
     sub_procs = []
-    #for ii, mm in enumerate(linspace(1,5,10)):
     ii = 0
     mm = 1
-    iter_loop_this(.001, mm, ii, 0)
 
     if True:
         for jj, qq in enumerate(linspace(0, 1, 100)):

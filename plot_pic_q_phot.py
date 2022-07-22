@@ -22,29 +22,29 @@ def m1_plot():
             5.064264174533536, 5.111837181221501, 5.159404519553631, 5.2069707242145915, 5.254540329889055,
             5.302119004932858, 5.349709016688335, 5.397314899840153]
 
-    files_here = f"/home/altin/ll_geod_scipy_ivp/secure_data/good_batch_1/m0/q"
+    files_here = f"/home/altin/ll_geod_scipy_ivp/data/m0/q"
     plot_list = []
-    for ii in range(100):
+    for ii in range(8):
         plot_list.append(load(files_here + str(ii) + ".npy"))
 
-    xval = linspace(0,1,100)
+    xval = linspace(0,.1,8)
     data = plot_list
 
-    popt, pcov = curve_fit(func, xval, data)
-    a, b, c, d = popt
+    #popt, pcov = curve_fit(func, xval, data)
+    #a, b, c, d = popt
 
-    # res = stats.linregress(xval, data)
+    res = stats.linregress(xval, data)
     ax = plt.axes()
     ax.plot(xval, data, "bo", linewidth=1, label="Datapoints")
-    # plt.plot(xval, res.intercept + res.slope * xval, 'k-', label='fitted line', linewidth=2)
-    # plt.text(x=0.01, y=5.1, s=f"r = {res.slope}q + {res.intercept}", fontsize=12)
-    ax.plot(xval, a*xval + b * sin(c*xval) + d, 'r-', label='fitted line', linewidth=2)
-    ax.text(x=0.01, y=5, s=f"r = a*q + b * sin(c * q) + d", fontsize=16)
-    ax.text(x=0.01, y=4.9, s=f"a = {a}", fontsize=16)
-    ax.text(x=0.01, y=4.8, s=f"b = {b}", fontsize=16)
-    ax.text(x=0.01, y=4.7, s=f"c = {c}", fontsize=16)
-    ax.text(x=0.01, y=4.6, s=f"d = {d}", fontsize=16)
-    ax.set(xlabel='q', ylabel='r')
+    plt.plot(xval, res.intercept + res.slope * xval, 'k-', label='fitted line', linewidth=2)
+    plt.text(x=0.01, y=3.1, s=f"r = {res.slope}q + {res.intercept}", fontsize=12)
+    #ax.plot(xval, a*xval + b * sin(c*xval) + d, 'r-', label='fitted line', linewidth=2)
+    #ax.text(x=0.01, y=5, s=f"r = a*q + b * sin(c * q) + d", fontsize=16)
+    #ax.text(x=0.01, y=4.9, s=f"a = {a}", fontsize=16)
+    #ax.text(x=0.01, y=4.8, s=f"b = {b}", fontsize=16)
+    #ax.text(x=0.01, y=4.7, s=f"c = {c}", fontsize=16)
+    #ax.text(x=0.01, y=4.6, s=f"d = {d}", fontsize=16)
+    #ax.set(xlabel='q', ylabel='r')
     ax.xaxis.label.set_size(20)
     ax.yaxis.label.set_size(20)
     plt.tick_params(axis='both', which='major', labelsize=20)

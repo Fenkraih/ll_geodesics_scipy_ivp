@@ -2,7 +2,9 @@ from numpy import sin, cos
 import matplotlib.pyplot as plt
 
 
-def plot_data_3d(result_sp, ax, black_geodesic, r_anzeige, plot_plane=None, axins=None):
+def plot_data_3d(result_sp, ax, black_geodesic=None, r_anzeige=None, plot_plane="xz", axins=None):
+    if black_geodesic == 1:
+        black_geodesic = True
     r = result_sp[0]
     theta = result_sp[1]
     phi = result_sp[2]
@@ -42,10 +44,12 @@ def plot_data_3d(result_sp, ax, black_geodesic, r_anzeige, plot_plane=None, axin
             if axins is not None:
                 axins.plot(y, z, "b-")
 
+    if r_anzeige is None:
+        r_anzeige = 10
     if plot_plane == "3d":
         ax.set_xlim([-r_anzeige, r_anzeige])
         ax.set_ylim([-r_anzeige, r_anzeige])
         ax.set_zlim([-r_anzeige, r_anzeige])
     else:
-        plt.xlim([-r_anzeige, r_anzeige])
-        plt.ylim([-r_anzeige, r_anzeige])
+        ax.set_xlim([-r_anzeige, r_anzeige])
+        ax.set_ylim([-r_anzeige, r_anzeige])

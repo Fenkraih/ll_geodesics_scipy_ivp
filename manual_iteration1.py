@@ -17,7 +17,7 @@ def too_deep(t, y, *args):
 
 
 def too_far(t, y, *args):
-    return 10 - abs(y[1])
+    return 9 - abs(y[1])
 
 
 def one_calculation(dist_this, mm_2, qq_2):
@@ -53,56 +53,75 @@ def one_calculation(dist_this, mm_2, qq_2):
     del result_spherical
 
 
+def cald_this(init_list, mm, quad):
+    sub_procs = []
+    for dist in init_list:
+        p = mp.Process(target=one_calculation,
+                       args=(dist, mm, quad))
+        sub_procs.append(p)
+        if len(sub_procs) == 4:
+            for pp in sub_procs:
+                pp.start()
+            for pp in sub_procs:
+                pp.join()
+            for pp in sub_procs:
+                pp.terminate()
+            sub_procs = []
+    bx_here = plt.axes()
+    for file in os.listdir(dirstring):
+        result_spherical = load(dirstring + file)
+        plot_data_3d(result_spherical, bx_here)
+    plt.show()
+
+
 if __name__ == "__main__":
     set_printoptions(precision=16)
     num_processes = os.cpu_count()
     too_deep.terminal = True
     too_far.terminal = True
     plot_plane = "xz"
-    sub_procs = []
 
     quad = .1
-    ii = 0
     mm = 1
     lower_thing, upper_thing = 3 * mm + 2 * quad - 0.5, 3 * mm + 2 * quad + 1
+
     ii = 1
-    init_list = linspace(lower_thing, upper_thing, 8)
-    ii += 1
-    init_list = linspace(init_list[1], init_list[3], 8)
-    ii += 1
-    init_list = linspace(init_list[5], init_list[6], 8)
-    ii += 1
-    init_list = linspace(init_list[3], init_list[4], 8)
-    ii += 1
-    init_list = linspace(init_list[4], init_list[5], 8)
-    ii += 1
-    init_list = linspace(init_list[4], init_list[5], 8)
-    ii += 1
-    init_list = linspace(init_list[1], init_list[2], 8)
-    ii += 1
-    init_list = linspace(init_list[1], init_list[2], 8)
-    ii += 1
-    init_list = linspace(init_list[3], init_list[4], 8)
-    ii += 1
-    # init_list = linspace(init_list[4], init_list[5], 8)
-    # ii += 1
     dirstring = f"/home/altin/ll_geod_scipy_ivp/data/it_{ii}/"
-    if True:
-        for dist in init_list:
-            p = mp.Process(target=one_calculation,
-                           args=(dist, mm, quad))
-            sub_procs.append(p)
-            if len(sub_procs) == 4:
-                for pp in sub_procs:
-                    pp.start()
-                for pp in sub_procs:
-                    pp.join()
-                for pp in sub_procs:
-                    pp.terminate()
-                sub_procs = []
-    bx_here = plt.axes()
-    for file in os.listdir(dirstring):
-        result_spherical = load(dirstring + file)
-        plot_data_3d(result_spherical, bx_here)
-    plt.show()
+    init_list = linspace(lower_thing, upper_thing, 8)
+    #cald_this(init_list, mm, quad)
+
+    ii += 1
+    dirstring = f"/home/altin/ll_geod_scipy_ivp/data/it_{ii}/"
+    init_list = linspace(init_list[1], init_list[3], 8)
+    #cald_this(init_list, mm, quad)
+
+    ii += 1
+    dirstring = f"/home/altin/ll_geod_scipy_ivp/data/it_{ii}/"
+    init_list = linspace(init_list[5], init_list[6], 8)
+    #cald_this(init_list, mm, quad)
+
+    ii += 1
+    dirstring = f"/home/altin/ll_geod_scipy_ivp/data/it_{ii}/"
+    init_list = linspace(init_list[3], init_list[4], 8)
+    #cald_this(init_list, mm, quad)
+
+    ii += 1
+    dirstring = f"/home/altin/ll_geod_scipy_ivp/data/it_{ii}/"
+    init_list = linspace(init_list[4], init_list[5], 8)
+    #cald_this(init_list, mm, quad)
+
+    ii += 1
+    dirstring = f"/home/altin/ll_geod_scipy_ivp/data/it_{ii}/"
+    init_list = linspace(init_list[4], init_list[5], 8)
+    #cald_this(init_list, mm, quad)
+
+    ii += 1
+    dirstring = f"/home/altin/ll_geod_scipy_ivp/data/it_{ii}/"
+    init_list = linspace(init_list[1], init_list[2], 8)
+    #cald_this(init_list, mm, quad)
+
+    ii += 1
+    dirstring = f"/home/altin/ll_geod_scipy_ivp/data/it_{ii}/"
+    init_list = linspace(init_list[1], init_list[2], 8)
+    #cald_this(init_list, mm, quad)
 

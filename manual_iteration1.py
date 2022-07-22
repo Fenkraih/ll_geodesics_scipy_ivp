@@ -27,7 +27,8 @@ def one_calculation(dist_this, mm_2, qq_2):
     u_t = space_light_timelike(init_ort, init_three_velocity, [qq_2, mm_2])
     init_4_vel = [u_t, *init_three_velocity]
     e = (1 - 2 * mm_2 / dist_this) ** (1 + qq_2) * u_t  # Energy, constant of motion
-    angular_mom = (1 - 2 * mm_2 / dist_this) ** (-qq_2) * dist_this ** 2 * sin(init_ort[2]) * init_4_vel[3]  # constant of motion
+    angular_mom = (1 - 2 * mm_2 / dist_this) ** (-qq_2) * dist_this ** 2 * sin(init_ort[2]) * init_4_vel[
+        3]  # constant of motion
     u_t, u_r, u_theta, u_phi = init_4_vel
     tt, rr1, theta_1, phi1 = init_ort
     sol = solve_ivp(quadrupol_ivp,
@@ -74,6 +75,59 @@ def cald_this(init_list, mm, quad):
     plt.show()
 
 
+def generate_date():
+    global dirstring
+    lower_thing, upper_thing = 3 * mm + 2 * quad - 0.5, 3 * mm + 2 * quad + 1
+
+    ii = 1
+    dirstring = f"/home/altin/ll_geod_scipy_ivp/data/it_{ii}/"
+    init_list = linspace(lower_thing, upper_thing, 8)
+    dark = [1, 1, 1, 0, 0, 0, 0, 0]
+    # cald_this(init_list, mm, quad)
+
+    ii += 1
+    dirstring = f"/home/altin/ll_geod_scipy_ivp/data/it_{ii}/"
+    init_list = linspace(init_list[1], init_list[3], 8)
+    dark = [1, 1, 1, 1, 1, 1, 0, 0]
+    # cald_this(init_list, mm, quad)
+
+    ii += 1
+    dirstring = f"/home/altin/ll_geod_scipy_ivp/data/it_{ii}/"
+    init_list = linspace(init_list[5], init_list[6], 8)
+    dark = [1, 1, 1, 1, 0, 0, 0, 0]
+    # cald_this(init_list, mm, quad)
+
+    ii += 1
+    dirstring = f"/home/altin/ll_geod_scipy_ivp/data/it_{ii}/"
+    init_list = linspace(init_list[3], init_list[4], 8)
+    dark = [1, 1, 1, 1, 1, 0, 0, 0]
+    # cald_this(init_list, mm, quad)
+
+    ii += 1
+    dirstring = f"/home/altin/ll_geod_scipy_ivp/data/it_{ii}/"
+    init_list = linspace(init_list[4], init_list[5], 8)
+    dark = [1, 1, 1, 1, 1, 0, 0, 0]
+    # cald_this(init_list, mm, quad)
+
+    ii += 1
+    dirstring = f"/home/altin/ll_geod_scipy_ivp/data/it_{ii}/"
+    init_list = linspace(init_list[4], init_list[5], 8)
+    dark = [1, 1, 0, 0, 0, 0, 0, 0]
+    # cald_this(init_list, mm, quad)
+
+    ii += 1
+    dirstring = f"/home/altin/ll_geod_scipy_ivp/data/it_{ii}/"
+    init_list = linspace(init_list[1], init_list[2], 8)
+    dark = [1, 1, 0, 0, 0, 0, 0, 0]
+    # cald_this(init_list, mm, quad)
+
+    ii += 1
+    dirstring = f"/home/altin/ll_geod_scipy_ivp/data/it_{ii}/"
+    init_list = linspace(init_list[1], init_list[2], 8)
+    dark = [1, 1, 1, 1, 0, 0, 0, 0]
+    # cald_this(init_list, mm, quad)
+
+
 if __name__ == "__main__":
     set_printoptions(precision=16)
     num_processes = os.cpu_count()
@@ -83,45 +137,4 @@ if __name__ == "__main__":
 
     quad = .1
     mm = 1
-    lower_thing, upper_thing = 3 * mm + 2 * quad - 0.5, 3 * mm + 2 * quad + 1
-
-    ii = 1
-    dirstring = f"/home/altin/ll_geod_scipy_ivp/data/it_{ii}/"
-    init_list = linspace(lower_thing, upper_thing, 8)
-    #cald_this(init_list, mm, quad)
-
-    ii += 1
-    dirstring = f"/home/altin/ll_geod_scipy_ivp/data/it_{ii}/"
-    init_list = linspace(init_list[1], init_list[3], 8)
-    #cald_this(init_list, mm, quad)
-
-    ii += 1
-    dirstring = f"/home/altin/ll_geod_scipy_ivp/data/it_{ii}/"
-    init_list = linspace(init_list[5], init_list[6], 8)
-    #cald_this(init_list, mm, quad)
-
-    ii += 1
-    dirstring = f"/home/altin/ll_geod_scipy_ivp/data/it_{ii}/"
-    init_list = linspace(init_list[3], init_list[4], 8)
-    #cald_this(init_list, mm, quad)
-
-    ii += 1
-    dirstring = f"/home/altin/ll_geod_scipy_ivp/data/it_{ii}/"
-    init_list = linspace(init_list[4], init_list[5], 8)
-    #cald_this(init_list, mm, quad)
-
-    ii += 1
-    dirstring = f"/home/altin/ll_geod_scipy_ivp/data/it_{ii}/"
-    init_list = linspace(init_list[4], init_list[5], 8)
-    #cald_this(init_list, mm, quad)
-
-    ii += 1
-    dirstring = f"/home/altin/ll_geod_scipy_ivp/data/it_{ii}/"
-    init_list = linspace(init_list[1], init_list[2], 8)
-    #cald_this(init_list, mm, quad)
-
-    ii += 1
-    dirstring = f"/home/altin/ll_geod_scipy_ivp/data/it_{ii}/"
-    init_list = linspace(init_list[1], init_list[2], 8)
-    #cald_this(init_list, mm, quad)
 

@@ -52,56 +52,6 @@ def one_calculation(dist_this, mm_2, qq_2):
 
     del result_spherical
 
-def plot_4_pictures():
-    fig, ax = plt.subplots(nrows=1, ncols=4, figsize=(10, 10), sharex=True, sharey=True)
-
-    for ii, geo in enumerate(resultate_1[0]):
-        if liste_of_sachen[0][ii] == 1:
-            plot_data_3d(geo, ax[0, 0], black_geodesic=True)
-        else:
-            plot_data_3d(geo, ax[0, 0], black_geodesic=False)
-
-    for ii, geo in enumerate(resultate_1[1]):
-        if liste_of_sachen[1][ii] == 1:
-            plot_data_3d(geo, ax[0, 1], black_geodesic=True)
-        else:
-            plot_data_3d(geo, ax[0, 1], black_geodesic=False)
-
-    for ii, geo in enumerate(resultate_1[2]):
-        if liste_of_sachen[2][ii] == 1:
-            plot_data_3d(geo, ax[1, 0], black_geodesic=True)
-        else:
-            plot_data_3d(geo, ax[1, 0], black_geodesic=False)
-
-    for ii, geo in enumerate(resultate_1[3]):
-        if liste_of_sachen[3][ii] == 1:
-            plot_data_3d(geo, ax[1, 1], black_geodesic=True)
-        else:
-            plot_data_3d(geo, ax[1, 1], black_geodesic=False)
-
-    title_list = ["i=1", "i=3", "i=6", "i=8"]
-    ii = 0
-    for axis_list in ax:
-        for axis in axis_list:
-            axis.set_xlim([-5, 5])
-            axis.set_ylim([-5, 5])
-            axis.set_title(title_list[ii], fontsize=20)
-            axis.tick_params(axis='both', which='major', labelsize=20)
-            ii += 1
-
-    for ax1 in ax.flat:
-        ax1.set(xlabel='x', ylabel='z')
-        ax1.xaxis.label.set_size(20)
-        ax1.yaxis.label.set_size(20)
-
-    for ax1 in ax.flat:
-        ax1.label_outer()
-
-    plt.show()
-
-    one_calculation(ende_gelaende, mm, quad)
-
-
 
 if __name__ == "__main__":
     set_printoptions(precision=16)
